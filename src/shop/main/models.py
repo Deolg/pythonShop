@@ -1,23 +1,32 @@
 from django.db import models
 
+
+
 # Models category.
 class Category(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True, unique=True)
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['name']
+        unique_together = ('slug', 'parent',)
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
     def __str__(self):
-        return self.name
+        full_path = [self.name]
+        k = self.parent
+
+        while k is not None:
+            full_path.append(k.name)
+            k = k.parent
+
+        return ' -> '.join(full_path[::-1])
 
 
 
 # Models product.
-
-
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', verbose_name='Категория', on_delete=models.CASCADE,)
     name = models.CharField(max_length=200, db_index=True, verbose_name="Название")
@@ -37,5 +46,14 @@ class Product(models.Model):
             ['id', 'slug']
         ]
 
+
     def __str__(self):
         return self.name
+
+    def get_cat_list(self):
+        k = self.category
+        breadcrumb = []
+        while k is not None:
+            breadcrumb.append(k.slug)
+            k = k.parent
+        return breadcrumb[-1:0:-1]

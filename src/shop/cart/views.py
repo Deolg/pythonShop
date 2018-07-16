@@ -22,6 +22,5 @@ def CartRemove(request, product_id):
 def CartDetail(request):
     cart = Cart(request)
     items = cart.get_items(request)
-    pdb.set_trace()
     
     return render(request, 'cart/detail.html', {'cart': items })

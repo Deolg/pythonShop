@@ -1,7 +1,6 @@
 from decimal import Decimal
 from django.conf import settings
 from main.models import Product
-import pdb
 
 
 class Cart(object):
@@ -29,20 +28,15 @@ class Cart(object):
         self.session[settings.CART_SESSION_ID] = self.cart
 
     def get_items(self, request):
-        return self.cart
 
-        # product_ids = self.cart.keys()
-        # products = Product.objects.filter(id__in=product_ids)
-        # for product in products:
-        #     self.cart[str(product.id)]['product'] = product
-        #
-        # for item in self.cart.values():
-        #     item['price'] = Decimal(item['price'])
-        #     item['total_price'] = item['price']
-        #     yield item
+        product_ids = self.cart.keys()
+        products = Product.objects.filter(id__in=product_ids)
+        for product in products:
+            self.cart[str(product.id)]['product'] = product
 
-    def get_total_price(self):
-        return sum(Decimal(item['price']) * item['quantity'] for item in self.cart.values())
+        for item in self.cart.values():
+            item['price'] = Decimal(item['price'])
+            yield item
 
 
     def clear(self):

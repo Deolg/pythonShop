@@ -10,5 +10,6 @@ app_name = 'main'
 # pylint: disable=invalid-name
 urlpatterns = [
     path('', views.ProductList, name='ProductList'),
-    path('<int:pk>/', views.ProductDetail, name='ProductDetail'),
+    path('<str:slug>/', views.ProductList, name='ProductList'),
+    path('detail/<int:pk>/', views.ProductDetail, name='ProductDetail'),
 ]
