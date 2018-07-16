@@ -10,10 +10,19 @@
 </head>
 <body>
   <section id="header">
+    <div class=" top-bl navbar-form pull-right">
+        {% if request.user.is_authenticated %}
+            Welcome, {% if request.user.first_name %}
+            {{ request.user.first_name}}
+            {% else %}
+            {{ request.user.username  }}
+            {% endif %}! <a href="(% url 'auth_logout' %}"> Log Out</a>
+        {% else %}
+             Welcome, mysterious person! <a href="{% url 'auth_login' %}">Log In? </a> or <a href="{% url 'registration_register' %}">Register</a>
+        {% endif %}
+    </div>
     <div class="top container">
       Мой Онлайн-Магазин
-    </div>
-    <div class="top-bl">
     </div>
   </section>
   <section id="content row" class="container">
